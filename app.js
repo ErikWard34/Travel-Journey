@@ -49,17 +49,18 @@ function createTraveler(journey) {
 
     traveler.className = "journey-sprite";
 
-    const image = document.createElement("img");
+const imageOne = document.createElement("img");
 
-    image.src = "assets/traveler.svg";
+imageOne.src = "assets/traveler.svg";
+imageOne.alt = `Journey in ${journey.country}`;
 
-    image.alt = `Journey in ${journey.country}`;
+const imageTwo = document.createElement("img");
 
-    image.style.width = "52px";
-    image.style.height = "68px";
-    image.style.imageRendering = "pixelated";
+imageTwo.src = "assets/traveler-breathe.svg";
+imageTwo.alt = "";
 
-    traveler.appendChild(image);
+traveler.appendChild(imageOne);
+traveler.appendChild(imageTwo);
 
 
     // --------------------------------
