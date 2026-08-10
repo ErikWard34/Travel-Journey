@@ -1,4 +1,13 @@
-const globe = Globe()(document.getElementById("globe"))
+console.log("app.js has started");
+
+const globeContainer = document.getElementById("globe");
+
+console.log("Globe container:", globeContainer);
+console.log("Globe library:", typeof Globe);
+
+const globe = Globe()(globeContainer);
+
+globe
     .backgroundColor("#03050a")
     .globeImageUrl(
         "https://unpkg.com/three-globe/example/img/earth-night.jpg"
@@ -10,7 +19,6 @@ const globe = Globe()(document.getElementById("globe"))
     .atmosphereColor("#5d87c7")
     .atmosphereAltitude(0.18);
 
-// Start position of the globe
 globe.pointOfView(
     {
         lat: 30,
@@ -20,4 +28,4 @@ globe.pointOfView(
     0
 );
 
-console.log("My Journey globe loaded!");
+console.log("Globe created successfully!");
