@@ -1,78 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Journey of Erik</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>The Journey of Erik</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <div id="app">
+
     <div id="globe"></div>
 
     <header class="topbar">
-      <div>
-        <h1>My Journey</h1>
-        <p id="journey-count">0 countries visited</p>
-      </div>
-      <button id="admin-button" class="admin-button" type="button">Admin</button>
+        <div>
+            <h1>My Journey</h1>
+            <p>0 countries visited</p>
+        </div>
+
+        <button class="admin-button">
+            Admin
+        </button>
     </header>
 
-    <div id="loading" class="loading">Loading the journey...</div>
+    <!-- Load Globe.gl first -->
+    <script src="https://cdn.jsdelivr.net/npm/globe.gl@2.46.1/dist/globe.gl.min.js"></script>
 
-    <section id="scroll-panel" class="scroll-panel" aria-hidden="true">
-      <div class="scroll-content">
-        <button id="close-scroll" class="close-scroll" type="button" aria-label="Close">×</button>
-        <div id="scroll-eyebrow" class="scroll-eyebrow"></div>
-        <h2 id="scroll-title"></h2>
-        <div id="scroll-text"></div>
-        <div id="scroll-countries"></div>
-      </div>
-    </section>
+    <!-- Then load our JavaScript -->
+    <script src="app.js"></script>
 
-    <section id="admin-panel" class="modal hidden" aria-hidden="true">
-      <div class="modal-card">
-        <button id="close-admin" class="modal-close" type="button">×</button>
-        <h2>Journey Admin</h2>
-
-        <div id="login-view">
-          <p>Sign in to add or edit your journeys.</p>
-          <form id="login-form">
-            <label>Email<input id="email" type="email" required autocomplete="email"></label>
-            <label>Password<input id="password" type="password" required autocomplete="current-password"></label>
-            <button type="submit">Sign in</button>
-          </form>
-          <p id="login-error" class="error"></p>
-        </div>
-
-        <div id="editor-view" class="hidden">
-          <form id="journey-form">
-            <input id="journey-id" type="hidden">
-            <label>Country
-              <select id="country" required></select>
-            </label>
-            <label>Title<input id="title" type="text" required maxlength="100"></label>
-            <label>Journey
-              <textarea id="description" rows="8" required maxlength="5000"></textarea>
-            </label>
-            <div class="form-actions">
-              <button type="submit">Save journey</button>
-              <button id="new-journey" type="button" class="secondary">New</button>
-              <button id="sign-out" type="button" class="danger">Sign out</button>
-            </div>
-          </form>
-
-          <h3>Your journeys</h3>
-          <div id="journey-list"></div>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <!-- Globe.gl bundles Three.js for this CDN build. -->
-  <script src="https://unpkg.com/globe.gl"></script>
-
-  <!-- Firebase modular SDKs. Replace the config in firebase.js. -->
-  <script type="module" src="app.js"></script>
 </body>
 </html>
