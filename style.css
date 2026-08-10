@@ -62,21 +62,60 @@ h1 {
 
     user-select: none;
 
-    transition: transform 0.2s ease;
+    position: relative;
 
     filter:
         drop-shadow(0 4px 3px rgba(0, 0, 0, 0.6));
 }
 
-.journey-sprite:hover {
-    transform: scale(1.15);
-}
-
 .journey-sprite img {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
     width: 52px;
     height: 68px;
 
     image-rendering: pixelated;
 
     display: block;
+}
+
+.journey-sprite img:first-child {
+    animation: breathe-normal 1.4s steps(1) infinite;
+}
+
+.journey-sprite img:nth-child(2) {
+    animation: breathe-second 1.4s steps(1) infinite;
+}
+
+@keyframes breathe-normal {
+
+    0%,
+    49% {
+        opacity: 1;
+    }
+
+    50%,
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes breathe-second {
+
+    0%,
+    49% {
+        opacity: 0;
+    }
+
+    50%,
+    100% {
+        opacity: 1;
+    }
+}
+
+.journey-sprite:hover {
+    transform: scale(1.15);
 }
