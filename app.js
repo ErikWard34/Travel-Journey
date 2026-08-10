@@ -26,43 +26,81 @@ globe.pointOfView(
 );
 
 
-// -----------------------------
-// Countries we have visited
-// -----------------------------
+// ------------------------------------
+// Our first journey
+// ------------------------------------
 
-const visitedCountries = [
+const journeys = [
     {
-        name: "Finland",
+        country: "Finland",
         lat: 64.0,
         lng: 26.0
-    },
-
-    {
-        name: "Germany",
-        lat: 51.2,
-        lng: 10.5
-    },
-
-    {
-        name: "Japan",
-        lat: 36.2,
-        lng: 138.3
     }
 ];
 
 
-// -----------------------------
-// Put markers on the globe
-// -----------------------------
+// ------------------------------------
+// Create the traveler sprite
+// ------------------------------------
+
+function createTraveler(journey) {
+
+    const traveler = document.createElement("div");
+
+    traveler.className = "journey-sprite";
+
+    const image = document.createElement("img");
+
+    image.src = "assets/traveler.svg";
+
+    image.alt = `Journey in ${journey.country}`;
+
+    image.style.width = "52px";
+    image.style.height = "68px";
+    image.style.imageRendering = "pixelated";
+
+    traveler.appendChild(image);
+
+
+    // --------------------------------
+    // Clicking the traveler
+    // --------------------------------
+
+    traveler.addEventListener("click", function(event) {
+
+        event.stopPropagation();
+
+        console.log(
+            `You clicked the journey in ${journey.country}`
+        );
+
+    });
+
+
+    return traveler;
+}
+
+
+// ------------------------------------
+// Put travelers on the globe
+// ------------------------------------
+
+const travelerElements = journeys.map(journey => {
+
+    return {
+        ...journey,
+        element: createTraveler(journey)
+    };
+
+});
+
 
 globe
-    .pointsData(visitedCountries)
-    .pointLat(country => country.lat)
-    .pointLng(country => country.lng)
-    .pointColor(() => "#ffffff")
-    .pointRadius(0.5)
-    .pointAltitude(0.02)
-    .pointLabel(country => country.name);
+    .htmlElementsData(travelerElements)
+    .htmlLat(journey => journey.lat)
+    .htmlLng(journey => journey.lng)
+    .htmlAltitude(0.03)
+    .htmlElement(journey => journey.element);
 
 
-console.log("Globe and countries loaded!");
+console.log("Traveler loaded!");
