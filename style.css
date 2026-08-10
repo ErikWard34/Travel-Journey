@@ -54,3 +54,29 @@ h1 {
     border-radius: 5px;
     cursor: pointer;
 }
+.journey-sprite {
+    width: 52px;
+    height: 68px;
+
+    cursor: pointer;
+
+    user-select: none;
+
+    transition: transform 0.2s ease;
+
+    filter:
+        drop-shadow(0 4px 3px rgba(0, 0, 0, 0.6));
+}
+
+.journey-sprite:hover {
+    transform: scale(1.15);
+}
+
+.journey-sprite img {
+    width: 52px;
+    height: 68px;
+
+    image-rendering: pixelated;
+
+    display: block;
+}
