@@ -43,35 +43,65 @@ const journeys = [
 // Create traveler
 // ------------------------------------
 
-function createTraveler() {
+function createTraveler(journey) {
 
-    const geometry = new THREE.BoxGeometry(8, 8, 8);
+    const traveler = document.createElement("div");
 
-    const material = new THREE.MeshBasicMaterial({
-        color: 0xff0000
+    traveler.className = "journey-sprite";
+
+    const imageOne = document.createElement("img");
+
+    imageOne.src = "assets/traveler.svg";
+    imageOne.alt = `Journey in ${journey.country}`;
+
+    const imageTwo = document.createElement("img");
+
+    imageTwo.src = "assets/traveler-breathe.svg";
+    imageTwo.alt = "";
+
+    traveler.appendChild(imageOne);
+    traveler.appendChild(imageTwo);
+
+
+    // --------------------------------
+    // Clicking the traveler
+    // --------------------------------
+
+    traveler.addEventListener("click", function(event) {
+
+        event.stopPropagation();
+
+        console.log(
+            `You clicked the journey in ${journey.country}`
+        );
+
     });
 
-    const cube = new THREE.Mesh(
-        geometry,
-        material
-    );
 
-    return cube;
+    return traveler;
 }
 
 
 // ------------------------------------
-// Add travelers
+// Put travelers on the globe
 // ------------------------------------
 
+const travelerElements = journeys.map(journey => {
+
+    return {
+        ...journey,
+        element: createTraveler(journey)
+    };
+
+});
+
+
 globe
-    .objectsData(journeys)
-    .objectLat(journey => journey.lat)
-    .objectLng(journey => journey.lng)
-    .objectAltitude(0.03)
-    .objectThreeObject(() => {
-        return createTraveler();
-    });
+    .htmlElementsData(travelerElements)
+    .htmlLat(journey => journey.lat)
+    .htmlLng(journey => journey.lng)
+    .htmlAltitude(0.03)
+    .htmlElement(journey => journey.element);
 
 
-console.log("Traveler added!");
+console.log("Globe and traveler loaded!");
