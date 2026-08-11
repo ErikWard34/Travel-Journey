@@ -27,7 +27,7 @@ globe.pointOfView(
 
 
 // ------------------------------------
-// Our first journey
+// Journey data
 // ------------------------------------
 
 const journeys = [
@@ -40,68 +40,82 @@ const journeys = [
 
 
 // ------------------------------------
-// Create the traveler sprite
+// Convert latitude/longitude to 3D
 // ------------------------------------
 
-function createTraveler(journey) {
+function latLngToVector3(lat, lng, radius) {
 
-    const traveler = document.createElement("div");
+    const phi = (90 - lat) * Math.PI / 180;
+    const theta = (lng + 180) * Math.PI / 180;
 
-    traveler.className = "journey-sprite";
+    const x = -radius * Math.sin(phi) * Math.cos(theta);
+    const z = radius * Math.sin(phi) * Math.sin(theta);
+    const y = radius * Math.cos(phi);
 
-const imageOne = document.createElement("img");
-
-imageOne.src = "assets/traveler.svg";
-imageOne.alt = `Journey in ${journey.country}`;
-
-const imageTwo = document.createElement("img");
-
-imageTwo.src = "assets/traveler-breathe.svg";
-imageTwo.alt = "";
-
-traveler.appendChild(imageOne);
-traveler.appendChild(imageTwo);
-
-
-    // --------------------------------
-    // Clicking the traveler
-    // --------------------------------
-
-    traveler.addEventListener("click", function(event) {
-
-        event.stopPropagation();
-
-        console.log(
-            `You clicked the journey in ${journey.country}`
-        );
-
-    });
-
-
-    return traveler;
+    return new THREE.Vector3(x, y, z);
 }
 
 
 // ------------------------------------
-// Put travelers on the globe
+// Create a traveler
 // ------------------------------------
 
-const travelerElements = journeys.map(journey => {
+function createTraveler(journey) {
 
-    return {
-        ...journey,
-        element: createTraveler(journey)
-    };
+    const textureLoader = new THREE.TextureLoader();
 
-});
+    const texture = textureLoader.load(
+        "assets/traveler.svg"
+    );
+
+    texture.colorSpace = THREE.SRGBColorSpace;
+
+    texture.magFilter = THREE.NearestFilter;
+    texture.minFilter = THREE.NearestFilter;
+
+    const material = new THREE.SpriteMaterial({
+        map: texture,
+        transparent: true
+    });
+
+    const sprite = new THREE.Sprite(material);
+
+    const globeRadius = globe.getGlobeRadius();
+
+    const position = latLngToVector3(
+        journey.lat,
+        journey.lng,
+        globeRadius + 5
+    );
+
+    sprite.position.copy(position);
+
+    sprite.scale.set(20, 26, 1);
+
+    return sprite;
+}
 
 
-globe
-    .htmlElementsData(travelerElements)
-    .htmlLat(journey => journey.lat)
-    .htmlLng(journey => journey.lng)
-    .htmlAltitude(0.03)
-    .htmlElement(journey => journey.element);
+// ------------------------------------
+// Add traveler to the Three.js scene
+// ------------------------------------
+
+const scene = globe.scene();
+
+const travelerObjects = [];
+
+for (const journey of journeys) {
+
+    const traveler = createTraveler(journey);
+
+    scene.add(traveler);
+
+    travelerObjects.push({
+        journey: journey,
+        sprite: traveler
+    });
+
+}
 
 
-console.log("Traveler loaded!");
+console.log("Traveler added to Three.js scene!");
