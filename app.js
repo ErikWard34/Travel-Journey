@@ -49,25 +49,20 @@ function createTraveler() {
 
     const textureLoader = new THREE.TextureLoader();
 
-    const texture = textureLoader.load(
-        "assets/traveler.svg"
-    );
+function createTraveler() {
 
-    texture.colorSpace = THREE.SRGBColorSpace;
+    const geometry = new THREE.BoxGeometry(8, 8, 8);
 
-    texture.magFilter = THREE.NearestFilter;
-    texture.minFilter = THREE.NearestFilter;
-
-    const material = new THREE.SpriteMaterial({
-        map: texture,
-        transparent: true
+    const material = new THREE.MeshBasicMaterial({
+        color: 0xff0000
     });
 
-    const sprite = new THREE.Sprite(material);
+    const cube = new THREE.Mesh(
+        geometry,
+        material
+    );
 
-    sprite.scale.set(20, 26, 1);
-
-    return sprite;
+    return cube;
 }
 
 
