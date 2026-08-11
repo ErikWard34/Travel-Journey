@@ -4,7 +4,9 @@ console.log("app.js has started");
 
 const globeContainer = document.getElementById("globe");
 
-const globe = Globe()(globeContainer);
+window.myGlobe = Globe()(globeContainer);
+
+const globe = window.myGlobe;
 
 globe
     .backgroundColor("#03050a")
