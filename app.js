@@ -1,12 +1,8 @@
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
-
 console.log("app.js has started");
 
 const globeContainer = document.getElementById("globe");
 
-window.myGlobe = Globe()(globeContainer);
-
-const globe = window.myGlobe;
+const globe = Globe()(globeContainer);
 
 globe
     .backgroundColor("#03050a")
@@ -49,10 +45,6 @@ const journeys = [
 
 function createTraveler() {
 
-    const textureLoader = new THREE.TextureLoader();
-
-function createTraveler() {
-
     const geometry = new THREE.BoxGeometry(8, 8, 8);
 
     const material = new THREE.MeshBasicMaterial({
@@ -74,13 +66,9 @@ function createTraveler() {
 
 globe
     .objectsData(journeys)
-
     .objectLat(journey => journey.lat)
-
     .objectLng(journey => journey.lng)
-
     .objectAltitude(0.03)
-
     .objectThreeObject(() => {
         return createTraveler();
     });
