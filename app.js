@@ -40,82 +40,55 @@ const journeys = [
 
 
 // ------------------------------------
-// Convert latitude/longitude to 3D
-// ------------------------------------
-
-function latLngToVector3(lat, lng, radius) {
-
-    const phi = (90 - lat) * Math.PI / 180;
-    const theta = (lng + 180) * Math.PI / 180;
-
-    const x = -radius * Math.sin(phi) * Math.cos(theta);
-    const z = radius * Math.sin(phi) * Math.sin(theta);
-    const y = radius * Math.cos(phi);
-
-    return new THREE.Vector3(x, y, z);
-}
-
-
-// ------------------------------------
-// Create a traveler
+// Create traveler
 // ------------------------------------
 
 function createTraveler(journey) {
 
-    const textureLoader = new THREE.TextureLoader();
+    const image = document.createElement("img");
 
-    const texture = textureLoader.load(
-        "assets/traveler.svg"
-    );
+    image.src = "assets/traveler.svg";
 
-    texture.colorSpace = THREE.SRGBColorSpace;
+    image.alt = "";
 
-    texture.magFilter = THREE.NearestFilter;
-    texture.minFilter = THREE.NearestFilter;
+    image.style.width = "52px";
+    image.style.height = "68px";
 
-    const material = new THREE.SpriteMaterial({
-        map: texture,
-        transparent: true
-    });
+    image.style.imageRendering = "pixelated";
 
-    const sprite = new THREE.Sprite(material);
-
-    const globeRadius = globe.getGlobeRadius();
-
-    const position = latLngToVector3(
-        journey.lat,
-        journey.lng,
-        globeRadius + 5
-    );
-
-    sprite.position.copy(position);
-
-    sprite.scale.set(20, 26, 1);
-
-    return sprite;
+    return image;
 }
 
 
 // ------------------------------------
-// Add traveler to the Three.js scene
+// Put travelers on the globe
 // ------------------------------------
 
-const scene = globe.scene();
+globe
+    .objectsData(journeys)
 
-const travelerObjects = [];
+    .objectLat(journey => journey.lat)
 
-for (const journey of journeys) {
+    .objectLng(journey => journey.lng)
 
-    const traveler = createTraveler(journey);
+    .objectAltitude(0.03)
 
-    scene.add(traveler);
+    .objectThreeObject(journey => {
 
-    travelerObjects.push({
-        journey: journey,
-        sprite: traveler
+        const image = createTraveler(journey);
+
+        /*
+         * Globe.gl's object layer expects a
+         * Three.js Object3D here.
+         *
+         * We will replace this with the
+         * proper Three.js sprite in the
+         * next step.
+         */
+
+        return image;
+
     });
 
-}
 
-
-console.log("Traveler added to Three.js scene!");
+console.log("Globe loaded!");
