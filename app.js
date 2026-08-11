@@ -1,3 +1,5 @@
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+
 console.log("app.js has started");
 
 const globeContainer = document.getElementById("globe");
@@ -43,25 +45,34 @@ const journeys = [
 // Create traveler
 // ------------------------------------
 
-function createTraveler(journey) {
+function createTraveler() {
 
-    const image = document.createElement("img");
+    const textureLoader = new THREE.TextureLoader();
 
-    image.src = "assets/traveler.svg";
+    const texture = textureLoader.load(
+        "assets/traveler.svg"
+    );
 
-    image.alt = "";
+    texture.colorSpace = THREE.SRGBColorSpace;
 
-    image.style.width = "52px";
-    image.style.height = "68px";
+    texture.magFilter = THREE.NearestFilter;
+    texture.minFilter = THREE.NearestFilter;
 
-    image.style.imageRendering = "pixelated";
+    const material = new THREE.SpriteMaterial({
+        map: texture,
+        transparent: true
+    });
 
-    return image;
+    const sprite = new THREE.Sprite(material);
+
+    sprite.scale.set(20, 26, 1);
+
+    return sprite;
 }
 
 
 // ------------------------------------
-// Put travelers on the globe
+// Add travelers
 // ------------------------------------
 
 globe
@@ -73,22 +84,9 @@ globe
 
     .objectAltitude(0.03)
 
-    .objectThreeObject(journey => {
-
-        const image = createTraveler(journey);
-
-        /*
-         * Globe.gl's object layer expects a
-         * Three.js Object3D here.
-         *
-         * We will replace this with the
-         * proper Three.js sprite in the
-         * next step.
-         */
-
-        return image;
-
+    .objectThreeObject(() => {
+        return createTraveler();
     });
 
 
-console.log("Globe loaded!");
+console.log("Traveler added!");
