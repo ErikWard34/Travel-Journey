@@ -1,5 +1,10 @@
 console.log("app.js has started");
 
+
+// ------------------------------------
+// Globe
+// ------------------------------------
+
 const globeContainer = document.getElementById("globe");
 
 const globe = Globe()(globeContainer);
@@ -24,64 +29,8 @@ globe.pointOfView(
     },
     0
 );
-// ------------------------------------
-// Journey scroll
-// ------------------------------------
 
-const journeyScroll = document.getElementById("journey-scroll");
-const scrollTitle = document.getElementById("scroll-title");
-const scrollText = document.getElementById("scroll-text");
-const closeScroll = document.getElementById("close-scroll");
 
-let openJourney = null;
-function openJourneyScroll(journey, element) {
-
-    // If clicking the currently open journey,
-    // close it instead.
-    if (openJourney === journey) {
-        closeJourneyScroll();
-        return;
-    }
-
-    openJourney = journey;
-
-    scrollTitle.textContent = journey.title;
-    scrollText.textContent = journey.description;
-
-    // Find where the sprite currently is on screen
-    const rect = element.getBoundingClientRect();
-
-    // Position scroll beside sprite
-    let left = rect.right + 15;
-    let top = rect.top - 20;
-
-    // Prevent scroll from going off the right side
-    if (left + 340 > window.innerWidth) {
-        left = rect.left - 355;
-    }
-
-    // Prevent scroll from going off the top
-    if (top < 20) {
-        top = 20;
-    }
-
-    // Prevent scroll from going off the bottom
-    if (top + 220 > window.innerHeight) {
-        top = window.innerHeight - 240;
-    }
-
-    journeyScroll.style.left = `${left}px`;
-    journeyScroll.style.top = `${top}px`;
-
-    journeyScroll.classList.add("open");
-}
-function closeJourneyScroll() {
-
-    openJourney = null;
-
-    journeyScroll.classList.remove("open");
-}
-closeScroll.addEventListener("click", closeJourneyScroll);
 // ------------------------------------
 // Journey data
 // ------------------------------------
@@ -103,6 +52,94 @@ const journeys = [
 
 
 // ------------------------------------
+// Scroll elements
+// ------------------------------------
+
+const journeyScroll = document.getElementById("journey-scroll");
+const scrollTitle = document.getElementById("scroll-title");
+const scrollText = document.getElementById("scroll-text");
+const closeScroll = document.getElementById("close-scroll");
+
+let openJourney = null;
+
+
+// ------------------------------------
+// Open journey scroll
+// ------------------------------------
+
+function openJourneyScroll(journey, element) {
+
+    console.log("Opening scroll:", journey.country);
+
+    // Clicking the currently open traveler closes it
+    if (openJourney === journey) {
+        closeJourneyScroll();
+        return;
+    }
+
+    openJourney = journey;
+
+    scrollTitle.textContent = journey.title;
+    scrollText.textContent = journey.description;
+
+
+    // Get sprite's current screen position
+    const rect = element.getBoundingClientRect();
+
+    let left = rect.right + 15;
+    let top = rect.top - 20;
+
+
+    // Keep scroll on screen
+
+    if (left + 340 > window.innerWidth) {
+        left = rect.left - 355;
+    }
+
+    if (top < 20) {
+        top = 20;
+    }
+
+    if (top + 220 > window.innerHeight) {
+        top = window.innerHeight - 240;
+    }
+
+
+    journeyScroll.style.left = `${left}px`;
+    journeyScroll.style.top = `${top}px`;
+
+    journeyScroll.classList.add("open");
+}
+
+
+// ------------------------------------
+// Close journey scroll
+// ------------------------------------
+
+function closeJourneyScroll() {
+
+    console.log("Closing scroll");
+
+    openJourney = null;
+
+    journeyScroll.classList.remove("open");
+}
+
+
+// ------------------------------------
+// Close button
+// ------------------------------------
+
+closeScroll.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    closeJourneyScroll();
+
+});
+
+
+// ------------------------------------
 // Create traveler
 // ------------------------------------
 
@@ -112,40 +149,54 @@ function createTraveler(journey) {
 
     traveler.className = "journey-sprite";
 
+
+    // First animation frame
+
     const imageOne = document.createElement("img");
 
     imageOne.src = "assets/traveler.svg";
+
     imageOne.alt = `Journey in ${journey.country}`;
+
+
+    // Second animation frame
 
     const imageTwo = document.createElement("img");
 
     imageTwo.src = "assets/traveler-breathe.svg";
+
     imageTwo.alt = "";
+
 
     traveler.appendChild(imageOne);
     traveler.appendChild(imageTwo);
 
 
     // --------------------------------
-    // Clicking the traveler
+    // Traveler click
     // --------------------------------
 
-   traveler.addEventListener("click", function(event) {
+    traveler.addEventListener("click", function(event) {
 
-    event.stopPropagation();
+        event.preventDefault();
+        event.stopPropagation();
 
-    openJourneyScroll(journey, traveler);
+        console.log(
+            "TRAVELER CLICKED:",
+            journey.country
+        );
 
-});
+        openJourneyScroll(journey, traveler);
+
+    });
+
 
     return traveler;
 }
-globeContainer.addEventListener("click", function() {
-    closeJourneyScroll();
-});
+
 
 // ------------------------------------
-// Put travelers on the globe
+// Create travelers
 // ------------------------------------
 
 const travelerElements = journeys.map(journey => {
@@ -158,12 +209,27 @@ const travelerElements = journeys.map(journey => {
 });
 
 
+// ------------------------------------
+// Put travelers on globe
+// ------------------------------------
+
 globe
     .htmlElementsData(travelerElements)
     .htmlLat(journey => journey.lat)
     .htmlLng(journey => journey.lng)
     .htmlAltitude(0.03)
     .htmlElement(journey => journey.element);
+
+
+// ------------------------------------
+// Clicking the globe closes the scroll
+// ------------------------------------
+
+globeContainer.addEventListener("click", function() {
+
+    closeJourneyScroll();
+
+});
 
 
 console.log("Globe and traveler loaded!");
