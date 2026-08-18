@@ -125,8 +125,7 @@ h1 {
 
 #journey-scroll {
     position: fixed;
-
-    z-index: 20;
+    z-index: 1000;
 
     width: 340px;
     min-height: 220px;
@@ -141,26 +140,7 @@ h1 {
     transition:
         transform 0.45s ease,
         opacity 0.2s ease;
-
-    /* Scroll appearance */
-    background:
-        linear-gradient(
-            to right,
-            #c79b58,
-            #f0d49a 8%,
-            #e8c889 50%,
-            #f0d49a 92%,
-            #c79b58
-        );
-
-    border: 3px solid #8a6335;
-    border-radius: 8px;
-
-    box-shadow:
-        0 8px 20px rgba(0, 0, 0, 0.55),
-        inset 0 0 20px rgba(90, 50, 20, 0.25);
 }
-
 
 /* Open state */
 
