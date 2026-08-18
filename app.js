@@ -24,8 +24,64 @@ globe.pointOfView(
     },
     0
 );
+// ------------------------------------
+// Journey scroll
+// ------------------------------------
 
+const journeyScroll = document.getElementById("journey-scroll");
+const scrollTitle = document.getElementById("scroll-title");
+const scrollText = document.getElementById("scroll-text");
+const closeScroll = document.getElementById("close-scroll");
 
+let openJourney = null;
+function openJourneyScroll(journey, element) {
+
+    // If clicking the currently open journey,
+    // close it instead.
+    if (openJourney === journey) {
+        closeJourneyScroll();
+        return;
+    }
+
+    openJourney = journey;
+
+    scrollTitle.textContent = journey.title;
+    scrollText.textContent = journey.description;
+
+    // Find where the sprite currently is on screen
+    const rect = element.getBoundingClientRect();
+
+    // Position scroll beside sprite
+    let left = rect.right + 15;
+    let top = rect.top - 20;
+
+    // Prevent scroll from going off the right side
+    if (left + 340 > window.innerWidth) {
+        left = rect.left - 355;
+    }
+
+    // Prevent scroll from going off the top
+    if (top < 20) {
+        top = 20;
+    }
+
+    // Prevent scroll from going off the bottom
+    if (top + 220 > window.innerHeight) {
+        top = window.innerHeight - 240;
+    }
+
+    journeyScroll.style.left = `${left}px`;
+    journeyScroll.style.top = `${top}px`;
+
+    journeyScroll.classList.add("open");
+}
+function closeJourneyScroll() {
+
+    openJourney = null;
+
+    journeyScroll.classList.remove("open");
+}
+closeScroll.addEventListener("click", closeJourneyScroll);
 // ------------------------------------
 // Journey data
 // ------------------------------------
@@ -34,7 +90,14 @@ const journeys = [
     {
         country: "Finland",
         lat: 64.0,
-        lng: 26.0
+        lng: 26.0,
+
+        title: "My Journey Through Finland",
+
+        description:
+            "Finland was one of the places I visited during my travels. " +
+            "I explored the countryside, experienced the local culture, " +
+            "and spent time taking in the incredible landscapes."
     }
 ];
 
@@ -67,20 +130,19 @@ function createTraveler(journey) {
     // Clicking the traveler
     // --------------------------------
 
-    traveler.addEventListener("click", function(event) {
+   traveler.addEventListener("click", function(event) {
 
-        event.stopPropagation();
+    event.stopPropagation();
 
-        console.log(
-            `You clicked the journey in ${journey.country}`
-        );
+    openJourneyScroll(journey, traveler);
 
-    });
-
+});
 
     return traveler;
 }
-
+globeContainer.addEventListener("click", function() {
+    closeJourneyScroll();
+});
 
 // ------------------------------------
 // Put travelers on the globe
