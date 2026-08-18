@@ -225,9 +225,14 @@ globe
 // Clicking the globe closes the scroll
 // ------------------------------------
 
-globeContainer.addEventListener("click", function() {
+traveler.addEventListener("pointerdown", function(event) {
 
-    closeJourneyScroll();
+    event.preventDefault();
+    event.stopPropagation();
+
+    console.log("TRAVELER POINTER DOWN:", journey.country);
+
+    openJourneyScroll(journey, traveler);
 
 });
 
