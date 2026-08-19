@@ -129,12 +129,34 @@ function updateJourneyScrollPosition() {
     const rect =
         openJourneyElement.getBoundingClientRect();
 
+
+    // If the traveler isn't currently visible,
+    // hide the scroll.
+
+    if (
+        rect.bottom < 0 ||
+        rect.top > window.innerHeight ||
+        rect.right < 0 ||
+        rect.left > window.innerWidth
+    ) {
+
+        journeyScroll.style.opacity = "0";
+
+        return;
+    }
+
+
+    // Traveler is visible again
+
+    journeyScroll.style.opacity = "";
+
+
     let left = rect.right + 15;
     let top = rect.top - 20;
 
 
     // --------------------------------
-    // Keep scroll on screen horizontally
+    // Right edge
     // --------------------------------
 
     if (left + 350 > window.innerWidth) {
@@ -145,7 +167,7 @@ function updateJourneyScrollPosition() {
 
 
     // --------------------------------
-    // Keep scroll on screen vertically
+    // Top edge
     // --------------------------------
 
     if (top < 25) {
@@ -154,6 +176,11 @@ function updateJourneyScrollPosition() {
 
     }
 
+
+    // --------------------------------
+    // Bottom edge
+    // --------------------------------
+
     if (top + 230 > window.innerHeight) {
 
         top = window.innerHeight - 255;
@@ -161,8 +188,11 @@ function updateJourneyScrollPosition() {
     }
 
 
-    journeyScroll.style.left = `${left}px`;
-    journeyScroll.style.top = `${top}px`;
+    journeyScroll.style.left =
+        `${left}px`;
+
+    journeyScroll.style.top =
+        `${top}px`;
 }
 
 // ------------------------------------
@@ -274,17 +304,38 @@ traveler.addEventListener("pointerdown", function(event) {
     openJourneyScroll(journey, traveler);
 
 });
-function followJourneyScroll() {
+// ------------------------------------
+// Keep scroll attached to traveler
+// ------------------------------------
 
-    if (openJourney && openJourneyElement) {
+function updateOpenScroll() {
 
-        updateJourneyScrollPosition();
-
+    if (!openJourney || !openJourneyElement) {
+        return;
     }
 
-    requestAnimationFrame(followJourneyScroll);
+    updateJourneyScrollPosition();
 }
 
-followJourneyScroll();
+
+// Update while zooming
+
+globe.onZoom(updateOpenScroll);
+
+
+// Update while rotating
+
+globe.controls().addEventListener(
+    "change",
+    updateOpenScroll
+);
+
+
+// Update when browser window changes size
+
+window.addEventListener(
+    "resize",
+    updateOpenScroll
+);
 
 console.log("Globe and traveler loaded!");
