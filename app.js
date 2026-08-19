@@ -61,7 +61,7 @@ const scrollText = document.getElementById("scroll-text");
 const closeScroll = document.getElementById("close-scroll");
 
 let openJourney = null;
-
+let openJourneyElement = null;
 
 // ------------------------------------
 // Open journey scroll
@@ -71,46 +71,41 @@ function openJourneyScroll(journey, element) {
 
     console.log("Opening scroll:", journey.country);
 
-    // Clicking the currently open traveler closes it
+
+    // Clicking the currently open traveler
+    // closes the scroll
     if (openJourney === journey) {
+
         closeJourneyScroll();
+
         return;
     }
 
+
+    // Remember what is open
+
     openJourney = journey;
-
-    scrollTitle.textContent = journey.title;
-    scrollText.textContent = journey.description;
+    openJourneyElement = element;
 
 
-    // Get sprite's current screen position
-    const rect = element.getBoundingClientRect();
+    // Fill the scroll
 
-    let left = rect.right + 15;
-    let top = rect.top - 20;
+    scrollTitle.textContent =
+        journey.title;
 
-
-    // Keep scroll on screen
-
-    if (left + 340 > window.innerWidth) {
-        left = rect.left - 355;
-    }
-
-    if (top < 20) {
-        top = 20;
-    }
-
-    if (top + 220 > window.innerHeight) {
-        top = window.innerHeight - 240;
-    }
+    scrollText.textContent =
+        journey.description;
 
 
-    journeyScroll.style.left = `${left}px`;
-    journeyScroll.style.top = `${top}px`;
+    // Position it
+
+    updateJourneyScrollPosition();
+
+
+    // Open it
 
     journeyScroll.classList.add("open");
 }
-
 
 // ------------------------------------
 // Close journey scroll
@@ -121,10 +116,54 @@ function closeJourneyScroll() {
     console.log("Closing scroll");
 
     openJourney = null;
+    openJourneyElement = null;
 
     journeyScroll.classList.remove("open");
 }
+function updateJourneyScrollPosition() {
 
+    if (!openJourney || !openJourneyElement) {
+        return;
+    }
+
+    const rect =
+        openJourneyElement.getBoundingClientRect();
+
+    let left = rect.right + 15;
+    let top = rect.top - 20;
+
+
+    // --------------------------------
+    // Keep scroll on screen horizontally
+    // --------------------------------
+
+    if (left + 350 > window.innerWidth) {
+
+        left = rect.left - 365;
+
+    }
+
+
+    // --------------------------------
+    // Keep scroll on screen vertically
+    // --------------------------------
+
+    if (top < 25) {
+
+        top = 25;
+
+    }
+
+    if (top + 230 > window.innerHeight) {
+
+        top = window.innerHeight - 255;
+
+    }
+
+
+    journeyScroll.style.left = `${left}px`;
+    journeyScroll.style.top = `${top}px`;
+}
 
 // ------------------------------------
 // Close button
@@ -235,6 +274,17 @@ traveler.addEventListener("pointerdown", function(event) {
     openJourneyScroll(journey, traveler);
 
 });
+function followJourneyScroll() {
 
+    if (openJourney && openJourneyElement) {
+
+        updateJourneyScrollPosition();
+
+    }
+
+    requestAnimationFrame(followJourneyScroll);
+}
+
+followJourneyScroll();
 
 console.log("Globe and traveler loaded!");
