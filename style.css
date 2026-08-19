@@ -131,89 +131,231 @@ h1 {
     position: fixed;
     z-index: 1000;
 
-    width: 340px;
-    min-height: 220px;
+    width: 350px;
+    min-height: 230px;
 
-    pointer-events: none;
+    box-sizing: border-box;
 
     opacity: 0;
+    pointer-events: none;
 
     transform: scaleX(0);
     transform-origin: left center;
 
     transition:
-        transform 0.45s ease,
+        transform 0.45s cubic-bezier(.2,.8,.2,1),
         opacity 0.2s ease;
+
+    /*
+        Parchment
+    */
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            rgba(255, 239, 190, 0.95) 0%,
+            rgba(230, 194, 125, 0.98) 70%,
+            rgba(180, 133, 69, 1) 100%
+        );
+
+    border: 2px solid #70491f;
+    border-radius: 5px;
+
+    box-shadow:
+        0 12px 25px rgba(0, 0, 0, 0.65),
+        inset 0 0 25px rgba(91, 53, 20, 0.35);
+
+    color: #382412;
 }
 
-/* Open state */
+
+/* ------------------------------------
+   Open animation
+------------------------------------ */
 
 #journey-scroll.open {
     opacity: 1;
+
     transform: scaleX(1);
+
     pointer-events: auto;
 }
 
 
-/* Actual content */
+/* ------------------------------------
+   Scroll rods
+------------------------------------ */
 
-.scroll-content {
-    position: relative;
+#journey-scroll::before,
+#journey-scroll::after {
 
-    padding: 28px 30px;
+    content: "";
 
-    color: #392512;
+    position: absolute;
 
-    font-family: Georgia, serif;
+    left: -10px;
+    right: -10px;
+
+    height: 18px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #5a3618,
+            #a86f32 35%,
+            #6d431d 65%,
+            #3e2410
+        );
+
+    border: 2px solid #321b0b;
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 3px 5px rgba(0, 0, 0, 0.45);
 }
 
 
-/* Scroll title */
+/* Top rod */
+
+#journey-scroll::before {
+    top: -9px;
+}
+
+
+/* Bottom rod */
+
+#journey-scroll::after {
+    bottom: -9px;
+}
+
+
+/* ------------------------------------
+   Scroll contents
+------------------------------------ */
+
+.scroll-content {
+
+    position: relative;
+
+    padding: 32px 32px 30px;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+}
+
+
+/* ------------------------------------
+   Title
+------------------------------------ */
 
 #scroll-title {
-    margin: 0 0 12px;
 
-    font-size: 24px;
+    margin: 0 25px 14px;
 
     text-align: center;
 
-    color: #302014;
+    font-size: 25px;
+
+    font-weight: bold;
+
+    color: #382412;
+
+    text-shadow:
+        0 1px rgba(255, 240, 190, 0.7);
 }
 
 
-/* Scroll text */
+/* ------------------------------------
+   Text
+------------------------------------ */
 
 #scroll-text {
+
     margin: 0;
 
     font-size: 16px;
 
-    line-height: 1.6;
+    line-height: 1.65;
+
+    color: #4a301a;
 }
 
 
-/* Close button */
+/* ------------------------------------
+   Close button
+------------------------------------ */
 
 #close-scroll {
+
     position: absolute;
 
     top: 7px;
-    right: 10px;
+    right: 8px;
 
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
+
+    padding: 0;
 
     border: none;
-    background: transparent;
+    border-radius: 50%;
 
-    color: #5b3a1e;
+    background: #71471f;
 
-    font-size: 22px;
-    line-height: 22px;
+    color: #f3dca7;
+
+    font-family: Georgia, serif;
+
+    font-size: 19px;
+    line-height: 28px;
 
     cursor: pointer;
+
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.4);
+
+    transition:
+        transform 0.15s ease,
+        background 0.15s ease;
 }
 
+
 #close-scroll:hover {
-    transform: scale(1.15);
+
+    background: #4e2e13;
+
+    transform: scale(1.12);
+}
+
+
+/* ------------------------------------
+   Small screen
+------------------------------------ */
+
+@media (max-width: 600px) {
+
+    #journey-scroll {
+
+        width: min(320px, calc(100vw - 30px));
+
+        min-height: 200px;
+    }
+
+    .scroll-content {
+
+        padding: 28px 24px;
+    }
+
+    #scroll-title {
+
+        font-size: 21px;
+    }
+
+    #scroll-text {
+
+        font-size: 15px;
+    }
 }
