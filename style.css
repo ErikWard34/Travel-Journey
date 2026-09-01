@@ -4,12 +4,17 @@ body {
     height: 100%;
     margin: 0;
 }
+.topbar h1,
+.topbar p {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
 
 body {
-    background: #03050a;
+    background: #9fdcff;
     color: white;
     font-family: Arial, sans-serif;
     overflow: hidden;
+}
 }
 
 #globe {
