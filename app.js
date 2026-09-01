@@ -28,16 +28,16 @@ const globe =
     Globe()(globeContainer);
 
 globe
-    .backgroundColor("#03050a")
+    .backgroundColor("#9fdcff")
     .globeImageUrl(
-        "https://unpkg.com/three-globe/example/img/earth-night.jpg"
+        "https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
     )
     .bumpImageUrl(
         "https://unpkg.com/three-globe/example/img/earth-topology.png"
     )
     .showAtmosphere(true)
-    .atmosphereColor("#5d87c7")
-    .atmosphereAltitude(0.18);
+    .atmosphereColor("#dff6ff")
+    .atmosphereAltitude(0.22);
 
 
 globe.pointOfView(
