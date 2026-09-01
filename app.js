@@ -1,13 +1,31 @@
 console.log("app.js has started");
 
 
-// ------------------------------------
+// ====================================
+// Supabase
+// ====================================
+
+const SUPABASE_URL =
+    "https://xnprkiceeswrplenhizk.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_BEt4YNqh9ii8AV7EfJTtVw_d4iRRFRn";
+
+const supabaseClient = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+
+// ====================================
 // Globe
-// ------------------------------------
+// ====================================
 
-const globeContainer = document.getElementById("globe");
+const globeContainer =
+    document.getElementById("globe");
 
-const globe = Globe()(globeContainer);
+const globe =
+    Globe()(globeContainer);
 
 globe
     .backgroundColor("#03050a")
@@ -21,6 +39,7 @@ globe
     .atmosphereColor("#5d87c7")
     .atmosphereAltitude(0.18);
 
+
 globe.pointOfView(
     {
         lat: 30,
@@ -31,49 +50,176 @@ globe.pointOfView(
 );
 
 
-// ------------------------------------
-// Journey data
-// ------------------------------------
+// ====================================
+// Page elements
+// ====================================
 
-const journeys = [
-    {
-        country: "Finland",
-        lat: 64.0,
-        lng: 26.0,
+const countryCount =
+    document.getElementById("country-count");
 
-        title: "My Journey Through Finland",
+const journeyScroll =
+    document.getElementById("journey-scroll");
 
-        description:
-            "Finland was one of the places I visited during my travels. " +
-            "I explored the countryside, experienced the local culture, " +
-            "and spent time taking in the incredible landscapes."
-    }
-];
+const scrollTitle =
+    document.getElementById("scroll-title");
+
+const scrollText =
+    document.getElementById("scroll-text");
+
+const closeScroll =
+    document.getElementById("close-scroll");
 
 
-// ------------------------------------
-// Scroll elements
-// ------------------------------------
-
-const journeyScroll = document.getElementById("journey-scroll");
-const scrollTitle = document.getElementById("scroll-title");
-const scrollText = document.getElementById("scroll-text");
-const closeScroll = document.getElementById("close-scroll");
+// ====================================
+// Open journey state
+// ====================================
 
 let openJourney = null;
+
 let openJourneyElement = null;
 
-// ------------------------------------
+
+// ====================================
+// Load journeys from Supabase
+// ====================================
+
+async function loadJourneys() {
+
+    console.log("Loading journeys from Supabase...");
+
+
+    const { data, error } =
+        await supabaseClient
+            .from("journeys")
+            .select(`
+                id,
+                country,
+                title,
+                description,
+                latitude,
+                longitude,
+                date_from,
+                date_to
+            `)
+            .order("created_at", {
+                ascending: true
+            });
+
+
+    // --------------------------------
+    // Error
+    // --------------------------------
+
+    if (error) {
+
+        console.error(
+            "Could not load journeys:",
+            error
+        );
+
+        countryCount.textContent =
+            "Could not load journeys";
+
+        return [];
+    }
+
+
+    console.log(
+        "Journeys loaded:",
+        data
+    );
+
+
+    // --------------------------------
+    // Convert database coordinates
+    //
+    // Database:
+    // latitude
+    // longitude
+    //
+    // Globe:
+    // lat
+    // lng
+    // --------------------------------
+
+    const journeys = data.map(journey => {
+
+        return {
+            ...journey,
+
+            lat: journey.latitude,
+            lng: journey.longitude
+        };
+
+    });
+
+
+    updateCountryCount(journeys);
+
+    return journeys;
+}
+
+
+// ====================================
+// Country counter
+// ====================================
+
+function updateCountryCount(journeys) {
+
+    const countries = [];
+
+
+    for (const journey of journeys) {
+
+        if (
+            !countries.includes(
+                journey.country
+            )
+        ) {
+
+            countries.push(
+                journey.country
+            );
+        }
+    }
+
+
+    const amount =
+        countries.length;
+
+
+    if (amount === 1) {
+
+        countryCount.textContent =
+            "1 country visited";
+
+    } else {
+
+        countryCount.textContent =
+            `${amount} countries visited`;
+
+    }
+}
+
+
+// ====================================
 // Open journey scroll
-// ------------------------------------
+// ====================================
 
-function openJourneyScroll(journey, element) {
+function openJourneyScroll(
+    journey,
+    element
+) {
 
-    console.log("Opening scroll:", journey.country);
+    console.log(
+        "Opening scroll:",
+        journey.country
+    );
 
 
-    // Clicking the currently open traveler
-    // closes the scroll
+    // Clicking the currently open
+    // traveler closes the scroll.
+
     if (openJourney === journey) {
 
         closeJourneyScroll();
@@ -82,13 +228,16 @@ function openJourneyScroll(journey, element) {
     }
 
 
-    // Remember what is open
+    // Remember currently open journey.
 
-    openJourney = journey;
-    openJourneyElement = element;
+    openJourney =
+        journey;
+
+    openJourneyElement =
+        element;
 
 
-    // Fill the scroll
+    // Fill scroll.
 
     scrollTitle.textContent =
         journey.title;
@@ -97,41 +246,62 @@ function openJourneyScroll(journey, element) {
         journey.description;
 
 
-    // Position it
+    // Position scroll.
 
     updateJourneyScrollPosition();
 
 
-    // Open it
+    // Open.
 
-    journeyScroll.classList.add("open");
+    journeyScroll.classList.add(
+        "open"
+    );
 }
 
-// ------------------------------------
+
+// ====================================
 // Close journey scroll
-// ------------------------------------
+// ====================================
 
 function closeJourneyScroll() {
 
     console.log("Closing scroll");
 
-    openJourney = null;
-    openJourneyElement = null;
+    openJourney =
+        null;
 
-    journeyScroll.classList.remove("open");
+    openJourneyElement =
+        null;
+
+    journeyScroll.classList.remove(
+        "open"
+    );
 }
+
+
+// ====================================
+// Position journey scroll
+// ====================================
+
 function updateJourneyScrollPosition() {
 
-    if (!openJourney || !openJourneyElement) {
+    if (
+        !openJourney ||
+        !openJourneyElement
+    ) {
+
         return;
     }
 
+
     const rect =
-        openJourneyElement.getBoundingClientRect();
+        openJourneyElement
+            .getBoundingClientRect();
 
 
-    // If the traveler isn't currently visible,
-    // hide the scroll.
+    // --------------------------------
+    // Traveler outside screen
+    // --------------------------------
 
     if (
         rect.bottom < 0 ||
@@ -140,29 +310,47 @@ function updateJourneyScrollPosition() {
         rect.left > window.innerWidth
     ) {
 
-        journeyScroll.style.opacity = "0";
+        journeyScroll.style.opacity =
+            "0";
 
         return;
     }
 
 
-    // Traveler is visible again
+    // Traveler visible again.
 
-    journeyScroll.style.opacity = "";
+    journeyScroll.style.opacity =
+        "";
 
 
-    let left = rect.right + 15;
-    let top = rect.top - 20;
+    let left =
+        rect.right + 15;
+
+    let top =
+        rect.top - 20;
 
 
     // --------------------------------
     // Right edge
     // --------------------------------
 
-    if (left + 350 > window.innerWidth) {
+    if (
+        left + 350 >
+        window.innerWidth
+    ) {
 
-        left = rect.left - 365;
+        left =
+            rect.left - 365;
+    }
 
+
+    // --------------------------------
+    // Left edge
+    // --------------------------------
+
+    if (left < 15) {
+
+        left = 15;
     }
 
 
@@ -173,7 +361,6 @@ function updateJourneyScrollPosition() {
     if (top < 25) {
 
         top = 25;
-
     }
 
 
@@ -181,10 +368,13 @@ function updateJourneyScrollPosition() {
     // Bottom edge
     // --------------------------------
 
-    if (top + 230 > window.innerHeight) {
+    if (
+        top + 230 >
+        window.innerHeight
+    ) {
 
-        top = window.innerHeight - 255;
-
+        top =
+            window.innerHeight - 255;
     }
 
 
@@ -195,147 +385,229 @@ function updateJourneyScrollPosition() {
         `${top}px`;
 }
 
-// ------------------------------------
+
+// ====================================
 // Close button
-// ------------------------------------
+// ====================================
 
-closeScroll.addEventListener("click", function(event) {
+closeScroll.addEventListener(
+    "click",
+    function(event) {
 
-    event.stopPropagation();
+        event.stopPropagation();
 
-    closeJourneyScroll();
+        closeJourneyScroll();
+    }
+);
 
-});
 
-
-// ------------------------------------
+// ====================================
 // Create traveler
-// ------------------------------------
+// ====================================
 
 function createTraveler(journey) {
 
-    const traveler = document.createElement("div");
+    const traveler =
+        document.createElement("div");
 
-    traveler.className = "journey-sprite";
-
-
-    // First animation frame
-
-    const imageOne = document.createElement("img");
-
-    imageOne.src = "assets/traveler.svg";
-
-    imageOne.alt = `Journey in ${journey.country}`;
+    traveler.className =
+        "journey-sprite";
 
 
-    // Second animation frame
+    // --------------------------------
+    // Animation frame 1
+    // --------------------------------
 
-    const imageTwo = document.createElement("img");
+    const imageOne =
+        document.createElement("img");
 
-    imageTwo.src = "assets/traveler-breathe.svg";
+    imageOne.src =
+        "assets/traveler.svg";
+
+    imageOne.alt =
+        `Journey in ${journey.country}`;
+
+
+    // --------------------------------
+    // Animation frame 2
+    // --------------------------------
+
+    const imageTwo =
+        document.createElement("img");
+
+    imageTwo.src =
+        "assets/traveler-breathe.svg";
 
     imageTwo.alt = "";
 
 
-    traveler.appendChild(imageOne);
-    traveler.appendChild(imageTwo);
+    traveler.appendChild(
+        imageOne
+    );
+
+    traveler.appendChild(
+        imageTwo
+    );
 
 
     // --------------------------------
     // Traveler click
     // --------------------------------
 
-    traveler.addEventListener("click", function(event) {
+    traveler.addEventListener(
+        "click",
+        function(event) {
 
-        event.preventDefault();
-        event.stopPropagation();
+            event.preventDefault();
 
-        console.log(
-            "TRAVELER CLICKED:",
-            journey.country
-        );
+            event.stopPropagation();
 
-        openJourneyScroll(journey, traveler);
 
-    });
+            console.log(
+                "TRAVELER CLICKED:",
+                journey.country
+            );
+
+
+            openJourneyScroll(
+                journey,
+                traveler
+            );
+        }
+    );
+
+
+    // Prevent globe drag from
+    // swallowing traveler clicks.
+
+    traveler.addEventListener(
+        "pointerdown",
+        function(event) {
+
+            event.stopPropagation();
+        }
+    );
 
 
     return traveler;
 }
 
 
-// ------------------------------------
-// Create travelers
-// ------------------------------------
+// ====================================
+// Put journeys on globe
+// ====================================
 
-const travelerElements = journeys.map(journey => {
+function displayJourneys(journeys) {
 
-    return {
-        ...journey,
-        element: createTraveler(journey)
-    };
+    const travelerElements =
+        journeys.map(journey => {
 
-});
+            return {
+                ...journey,
 
-
-// ------------------------------------
-// Put travelers on globe
-// ------------------------------------
-
-globe
-    .htmlElementsData(travelerElements)
-    .htmlLat(journey => journey.lat)
-    .htmlLng(journey => journey.lng)
-    .htmlAltitude(0.03)
-    .htmlElement(journey => journey.element);
+                element:
+                    createTraveler(
+                        journey
+                    )
+            };
+        });
 
 
-// ------------------------------------
-// Clicking the globe closes the scroll
-// ------------------------------------
+    globe
+        .htmlElementsData(
+            travelerElements
+        )
 
-traveler.addEventListener("pointerdown", function(event) {
+        .htmlLat(
+            journey =>
+                journey.lat
+        )
 
-    event.preventDefault();
-    event.stopPropagation();
+        .htmlLng(
+            journey =>
+                journey.lng
+        )
 
-    console.log("TRAVELER POINTER DOWN:", journey.country);
+        .htmlAltitude(
+            0.03
+        )
 
-    openJourneyScroll(journey, traveler);
+        .htmlElement(
+            journey =>
+                journey.element
+        );
 
-});
-// ------------------------------------
+
+    console.log(
+        "Travelers displayed:",
+        travelerElements.length
+    );
+}
+
+
+// ====================================
 // Keep scroll attached to traveler
-// ------------------------------------
+// ====================================
 
 function updateOpenScroll() {
 
-    if (!openJourney || !openJourneyElement) {
+    if (
+        !openJourney ||
+        !openJourneyElement
+    ) {
+
         return;
     }
+
 
     updateJourneyScrollPosition();
 }
 
 
-// Update while zooming
+// Update while zooming.
 
-globe.onZoom(updateOpenScroll);
-
-
-// Update while rotating
-
-globe.controls().addEventListener(
-    "change",
+globe.onZoom(
     updateOpenScroll
 );
 
 
-// Update when browser window changes size
+// Update while rotating.
+
+globe
+    .controls()
+    .addEventListener(
+        "change",
+        updateOpenScroll
+    );
+
+
+// Update when browser changes size.
 
 window.addEventListener(
     "resize",
     updateOpenScroll
 );
 
-console.log("Globe and traveler loaded!");
+
+// ====================================
+// Start application
+// ====================================
+
+async function startJourneyApp() {
+
+    const journeys =
+        await loadJourneys();
+
+
+    displayJourneys(
+        journeys
+    );
+
+
+    console.log(
+        "Globe and travelers loaded!"
+    );
+}
+
+
+startJourneyApp();
