@@ -13,11 +13,12 @@
 
     <div id="globe"></div>
 
-    <div id="journey-scroll">
+    <div id="journey-scroll" aria-hidden="true">
         <div class="scroll-content">
-            <button id="close-scroll">×</button>
+            <button id="close-scroll" type="button" aria-label="Close journey">×</button>
             <h2 id="scroll-title"></h2>
             <p id="scroll-text"></p>
+            <div id="scroll-photos" class="scroll-photos"></div>
         </div>
     </div>
 
@@ -27,18 +28,138 @@
             <p id="country-count">Loading journeys...</p>
         </div>
 
-        <button class="admin-button">
+        <button id="admin-button" class="admin-button" type="button">
             Admin
         </button>
     </header>
 
+    <div id="admin-backdrop" class="admin-backdrop" hidden></div>
+
+    <section id="admin-panel" class="admin-panel" hidden aria-hidden="true">
+        <div class="admin-panel-header">
+            <div>
+                <p class="admin-kicker">My Journey</p>
+                <h2>Admin</h2>
+            </div>
+            <button id="admin-close" class="icon-button" type="button" aria-label="Close admin panel">×</button>
+        </div>
+
+        <div id="admin-auth-view">
+            <p class="admin-help">
+                Sign in with the email address registered as the site administrator.
+            </p>
+
+            <form id="admin-login-form" class="admin-form">
+                <label>
+                    Email
+                    <input id="admin-email" type="email" autocomplete="email" required>
+                </label>
+
+                <label>
+                    Password
+                    <input id="admin-password" type="password" autocomplete="current-password" minlength="8" required>
+                </label>
+
+                <div class="admin-actions">
+                    <button class="primary-button" type="submit">Sign in</button>
+                    <button id="admin-signup" class="secondary-button" type="button">Create admin login</button>
+                </div>
+
+                <p id="admin-auth-message" class="admin-message" aria-live="polite"></p>
+            </form>
+        </div>
+
+        <div id="admin-dashboard-view" hidden>
+            <div class="admin-dashboard-toolbar">
+                <div>
+                    <strong id="admin-user-label"></strong>
+                    <p>Manage the journeys shown on the globe.</p>
+                </div>
+
+                <button id="admin-signout" class="secondary-button" type="button">Sign out</button>
+            </div>
+
+            <div class="admin-grid">
+                <div class="admin-journey-list-wrap">
+                    <div class="section-heading-row">
+                        <h3>Your journeys</h3>
+                        <button id="new-journey-button" class="primary-button" type="button">+ Add journey</button>
+                    </div>
+
+                    <div id="admin-journey-list" class="admin-journey-list"></div>
+                </div>
+
+                <div class="admin-editor-wrap">
+                    <h3 id="journey-form-heading">Add journey</h3>
+
+                    <form id="journey-form" class="admin-form">
+                        <input id="journey-id" type="hidden">
+
+                        <label>
+                            Country
+                            <input id="journey-country" type="text" required>
+                        </label>
+
+                        <label>
+                            Scroll title
+                            <input id="journey-title" type="text" required>
+                        </label>
+
+                        <label>
+                            Story
+                            <textarea id="journey-description" rows="7" required></textarea>
+                        </label>
+
+                        <div class="form-row">
+                            <label>
+                                Latitude
+                                <input id="journey-latitude" type="number" min="-90" max="90" step="any" required>
+                            </label>
+
+                            <label>
+                                Longitude
+                                <input id="journey-longitude" type="number" min="-180" max="180" step="any" required>
+                            </label>
+                        </div>
+
+                        <div class="form-row">
+                            <label>
+                                Start date
+                                <input id="journey-date-from" type="date">
+                            </label>
+
+                            <label>
+                                End date
+                                <input id="journey-date-to" type="date">
+                            </label>
+                        </div>
+
+                        <label>
+                            Add photos
+                            <input id="journey-photos" type="file" accept="image/*" multiple>
+                        </label>
+
+                        <div id="existing-photos" class="existing-photos"></div>
+
+                        <div class="admin-actions">
+                            <button class="primary-button" type="submit">Save journey</button>
+                            <button id="cancel-edit" class="secondary-button" type="button">Clear form</button>
+                        </div>
+
+                        <p id="journey-form-message" class="admin-message" aria-live="polite"></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Globe.gl -->
     <script src="https://cdn.jsdelivr.net/npm/globe.gl@2.46.1/dist/globe.gl.min.js"></script>
 
-    <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Supabase JS (pinned) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/dist/umd/supabase.js"></script>
 
-    <!-- Our code -->
+    <!-- Our JavaScript -->
     <script src="app.js"></script>
 
 </body>
