@@ -4,17 +4,22 @@ body {
     height: 100%;
     margin: 0;
 }
-.topbar h1,
-.topbar p {
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+
+* {
+    box-sizing: border-box;
 }
 
 body {
-    background: #9fdcff;
+    background: #03050a;
     color: white;
     font-family: Arial, sans-serif;
     overflow: hidden;
 }
+
+button,
+input,
+textarea {
+    font: inherit;
 }
 
 #globe {
@@ -30,12 +35,9 @@ body {
     top: 0;
     left: 0;
     right: 0;
-
     display: flex;
     justify-content: space-between;
-
     padding: 20px;
-
     pointer-events: none;
 }
 
@@ -51,43 +53,39 @@ h1 {
     margin-top: 5px;
 }
 
+.admin-button,
+.primary-button,
+.secondary-button,
+.icon-button {
+    cursor: pointer;
+}
+
 .admin-button {
     padding: 10px 16px;
     color: white;
     background: #17120b;
     border: 1px solid #bda66c;
     border-radius: 5px;
-    cursor: pointer;
 }
+
 .journey-sprite {
     width: 52px;
     height: 68px;
-
     cursor: pointer;
-
     user-select: none;
-
     position: relative;
-
     pointer-events: auto;
     z-index: 100;
-
-    filter:
-        drop-shadow(0 4px 3px rgba(0, 0, 0, 0.6));
-  
+    filter: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.6));
 }
 
 .journey-sprite img {
     position: absolute;
-
     top: 0;
     left: 0;
-
     width: 52px;
     height: 68px;
-
     image-rendering: pixelated;
-
     display: block;
 }
 
@@ -100,7 +98,6 @@ h1 {
 }
 
 @keyframes breathe-normal {
-
     0%,
     49% {
         opacity: 1;
@@ -113,7 +110,6 @@ h1 {
 }
 
 @keyframes breathe-second {
-
     0%,
     49% {
         opacity: 0;
@@ -128,239 +124,364 @@ h1 {
 .journey-sprite:hover {
     transform: scale(1.15);
 }
-/* ====================================
-   Journey Scroll
-==================================== */
+
+/* ------------------------------------
+   Journey scroll
+------------------------------------ */
 
 #journey-scroll {
     position: fixed;
     z-index: 1000;
-
-    width: 350px;
-    min-height: 230px;
-
-    box-sizing: border-box;
-
+    width: min(380px, calc(100vw - 30px));
+    min-height: 220px;
     opacity: 0;
     pointer-events: none;
-
     transform: scaleX(0);
     transform-origin: left center;
-
-    transition:
-        transform 0.45s cubic-bezier(.2,.8,.2,1),
-        opacity 0.2s ease;
-
-    /*
-        Parchment
-    */
-
-    background:
-        radial-gradient(
-            ellipse at center,
-            rgba(255, 239, 190, 0.95) 0%,
-            rgba(230, 194, 125, 0.98) 70%,
-            rgba(180, 133, 69, 1) 100%
-        );
-
+    transition: transform 0.42s cubic-bezier(.2, .8, .2, 1), opacity 0.2s ease;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(255, 239, 190, 0.98) 0%,
+        rgba(230, 194, 125, 0.98) 70%,
+        rgba(180, 133, 69, 1) 100%
+    );
     border: 2px solid #70491f;
     border-radius: 5px;
-
-    box-shadow:
-        0 12px 25px rgba(0, 0, 0, 0.65),
-        inset 0 0 25px rgba(91, 53, 20, 0.35);
-
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.65), inset 0 0 25px rgba(91, 53, 20, 0.35);
     color: #382412;
 }
 
-
-/* ------------------------------------
-   Open animation
------------------------------------- */
-
 #journey-scroll.open {
     opacity: 1;
-
     transform: scaleX(1);
-
     pointer-events: auto;
 }
 
-
-/* ------------------------------------
-   Scroll rods
------------------------------------- */
-
 #journey-scroll::before,
 #journey-scroll::after {
-
     content: "";
-
     position: absolute;
-
     left: -10px;
     right: -10px;
-
     height: 18px;
-
-    background:
-        linear-gradient(
-            to bottom,
-            #5a3618,
-            #a86f32 35%,
-            #6d431d 65%,
-            #3e2410
-        );
-
+    background: linear-gradient(to bottom, #5a3618, #a86f32 35%, #6d431d 65%, #3e2410);
     border: 2px solid #321b0b;
-
     border-radius: 50%;
-
-    box-shadow:
-        0 3px 5px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.45);
 }
-
-
-/* Top rod */
 
 #journey-scroll::before {
     top: -9px;
 }
 
-
-/* Bottom rod */
-
 #journey-scroll::after {
     bottom: -9px;
 }
 
-
-/* ------------------------------------
-   Scroll contents
------------------------------------- */
-
 .scroll-content {
-
     position: relative;
-
     padding: 32px 32px 30px;
-
-    font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
+    font-family: Georgia, "Times New Roman", serif;
 }
-
-
-/* ------------------------------------
-   Title
------------------------------------- */
 
 #scroll-title {
-
     margin: 0 25px 14px;
-
     text-align: center;
-
     font-size: 25px;
-
-    font-weight: bold;
-
     color: #382412;
-
-    text-shadow:
-        0 1px rgba(255, 240, 190, 0.7);
 }
 
-
-/* ------------------------------------
-   Text
------------------------------------- */
-
 #scroll-text {
-
     margin: 0;
-
+    white-space: pre-wrap;
     font-size: 16px;
-
     line-height: 1.65;
-
     color: #4a301a;
 }
 
-
-/* ------------------------------------
-   Close button
------------------------------------- */
-
 #close-scroll {
-
     position: absolute;
-
-    top: 7px;
-    right: 8px;
-
-    width: 28px;
-    height: 28px;
-
+    top: 5px;
+    right: 7px;
+    width: 30px;
+    height: 30px;
     padding: 0;
-
     border: none;
     border-radius: 50%;
-
     background: #71471f;
-
     color: #f3dca7;
-
-    font-family: Georgia, serif;
-
-    font-size: 19px;
-    line-height: 28px;
-
+    font-size: 20px;
     cursor: pointer;
-
-    box-shadow:
-        0 2px 4px rgba(0, 0, 0, 0.4);
-
-    transition:
-        transform 0.15s ease,
-        background 0.15s ease;
 }
 
-
-#close-scroll:hover {
-
-    background: #4e2e13;
-
-    transform: scale(1.12);
+.scroll-photos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 18px;
 }
 
+.scroll-photos img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border: 2px solid rgba(80, 48, 20, 0.35);
+    border-radius: 4px;
+}
 
 /* ------------------------------------
-   Small screen
+   Admin panel
 ------------------------------------ */
 
-@media (max-width: 600px) {
+.admin-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1990;
+    background: rgba(0, 0, 0, 0.56);
+    backdrop-filter: blur(3px);
+}
 
-    #journey-scroll {
+.admin-panel {
+    position: fixed;
+    z-index: 2000;
+    top: 20px;
+    right: 20px;
+    bottom: 20px;
+    width: min(920px, calc(100vw - 40px));
+    overflow: auto;
+    padding: 24px;
+    background: rgba(15, 14, 13, 0.97);
+    border: 1px solid #bda66c;
+    border-radius: 12px;
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.65);
+}
 
-        width: min(320px, calc(100vw - 30px));
+.admin-panel-header,
+.admin-dashboard-toolbar,
+.section-heading-row,
+.admin-actions,
+.form-row {
+    display: flex;
+    align-items: center;
+}
 
-        min-height: 200px;
+.admin-panel-header,
+.admin-dashboard-toolbar,
+.section-heading-row {
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.admin-panel-header h2,
+.admin-panel-header p,
+.admin-dashboard-toolbar p,
+.section-heading-row h3,
+.admin-editor-wrap h3 {
+    margin: 0;
+}
+
+.admin-kicker {
+    color: #d8c89a;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.icon-button {
+    width: 38px;
+    height: 38px;
+    border: 1px solid #6a5a3f;
+    border-radius: 50%;
+    background: transparent;
+    color: white;
+    font-size: 24px;
+}
+
+.admin-help,
+.admin-dashboard-toolbar p {
+    color: #c7c1b7;
+}
+
+.admin-form {
+    display: grid;
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.admin-form label {
+    display: grid;
+    gap: 7px;
+    color: #eee7d9;
+    font-size: 14px;
+}
+
+.admin-form input,
+.admin-form textarea {
+    width: 100%;
+    padding: 11px 12px;
+    color: white;
+    background: #0e0d0c;
+    border: 1px solid #4d4436;
+    border-radius: 6px;
+    outline: none;
+}
+
+.admin-form input:focus,
+.admin-form textarea:focus {
+    border-color: #bda66c;
+}
+
+.admin-actions {
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.primary-button,
+.secondary-button {
+    padding: 10px 14px;
+    border-radius: 6px;
+}
+
+.primary-button {
+    border: 1px solid #d8bf7a;
+    background: #bda66c;
+    color: #15110b;
+    font-weight: 700;
+}
+
+.secondary-button {
+    border: 1px solid #60543f;
+    background: #201d18;
+    color: white;
+}
+
+.admin-message {
+    min-height: 1.3em;
+    margin: 0;
+    color: #d8c89a;
+}
+
+.admin-message.error {
+    color: #ff9e9e;
+}
+
+.admin-message.success {
+    color: #aee8b3;
+}
+
+.admin-dashboard-toolbar {
+    margin: 20px 0;
+    padding: 14px 0 18px;
+    border-bottom: 1px solid #353027;
+}
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: minmax(250px, 0.8fr) minmax(360px, 1.2fr);
+    gap: 26px;
+}
+
+.admin-journey-list {
+    display: grid;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.admin-journey-card {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 13px;
+    border: 1px solid #373126;
+    border-radius: 8px;
+    background: #151310;
+}
+
+.admin-journey-card p {
+    margin: 4px 0 0;
+    color: #aaa396;
+    font-size: 13px;
+}
+
+.admin-card-actions {
+    display: flex;
+    gap: 7px;
+    align-items: flex-start;
+}
+
+.admin-card-actions button {
+    padding: 6px 8px;
+    border-radius: 5px;
+    border: 1px solid #514938;
+    background: #242019;
+    color: white;
+    cursor: pointer;
+}
+
+.admin-card-actions .danger-button {
+    border-color: #724545;
+    color: #ffb4b4;
+}
+
+.form-row {
+    gap: 12px;
+    align-items: start;
+}
+
+.form-row > label {
+    flex: 1;
+}
+
+.existing-photos {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.existing-photo {
+    position: relative;
+}
+
+.existing-photo img {
+    width: 100%;
+    height: 95px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.existing-photo button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    border: none;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    background: rgba(0, 0, 0, 0.76);
+    color: white;
+    cursor: pointer;
+}
+
+@media (max-width: 760px) {
+    .admin-panel {
+        inset: 10px;
+        width: auto;
+        padding: 18px;
     }
 
-    .scroll-content {
-
-        padding: 28px 24px;
+    .admin-grid {
+        grid-template-columns: 1fr;
     }
 
-    #scroll-title {
-
-        font-size: 21px;
+    .form-row {
+        flex-direction: column;
     }
 
-    #scroll-text {
+    .form-row > label {
+        width: 100%;
+    }
 
-        font-size: 15px;
+    .scroll-photos {
+        grid-template-columns: 1fr;
     }
 }
